@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "jest",
+    "hello": "node ./bin/hello.js",
+    "one": "node ./bin/one.js",
+    "cluster": "node ./bin/cluster.js",
+    "string": "node ./bin/string.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/daniel-easy-pv/string-allocation/issues"
   },
-  "homepage": "https://github.com/daniel-easy-pv/string-allocation#readme"
+  "homepage": "https://github.com/daniel-easy-pv/string-allocation#readme",
+  "devDependencies": {
+    "eslint": "^8.27.0",
+    "jest": "^29.3.1"
+  }
 }
