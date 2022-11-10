@@ -142,17 +142,6 @@ function solve(points, salesmenCapacities, temp_coeff, callback) {
     return cluster.order;
 }
 
-/**
- * Represents a point in two dimensions.
- * @class
- * @param {Number} x abscissa
- * @param {Number} y ordinate
- */
-function Point(x, y) {
-    this.x = x;
-    this.y = y;
-}
-
 function distance(p, q) {
     const dx = p.x - q.x; const
         dy = p.y - q.y;
@@ -166,6 +155,5 @@ function distance(p, q) {
 if (typeof module === 'object') {
     module.exports = {
         solve,
-        Point,
     };
 }

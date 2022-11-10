@@ -40,15 +40,4 @@ const solve = (points, salesmenCapacities, distanceFn, isLoop) => {
     return clusteredOrder;
 }
 
-/**
- * Represents a point in two dimensions.
- * @class
- * @param {Number} x abscissa
- * @param {Number} y ordinate
- */
-function Point(x, y) {
-    this.x = x;
-    this.y = y;
-}
-
-module.exports = { solve, Point };
+module.exports = { solve };

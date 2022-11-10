@@ -36,7 +36,7 @@ for (let iy = 0; iy < ny; iy++) {
 
 // String settings.
 const salesmenCapacities = [15, 15, 15, 15, 15, 15, 12];
-const distanceFn = distance.euclidean;
+const distanceFn = distance.euclideanSquared;
 const showString = true;
 const isLoop = false;
 

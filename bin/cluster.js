@@ -9,7 +9,9 @@ const points = [];
 const nPoints = 20;
 const salesmenCapacities = [10, 5, 5];
 for (let i = 0; i < nPoints; i++) {
-    points.push(new clus.Point(rand.randomFloat(-1, 1), rand.randomFloat(-1, 1)));
+    const x = rand.randomFloat(-1, 1);
+    const y = rand.randomFloat(-1, 1);
+    points.push({ x, y });
 }
 
 const order = clus.solve(points, salesmenCapacities);
