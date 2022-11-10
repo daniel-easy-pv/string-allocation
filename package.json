@@ -1,0 +1,19 @@
+{
+  "name": "string-allocation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daniel-easy-pv/string-allocation.git"
+  },
+  "author": "Daniel Ng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/daniel-easy-pv/string-allocation/issues"
+  },
+  "homepage": "https://github.com/daniel-easy-pv/string-allocation#readme"
+}
