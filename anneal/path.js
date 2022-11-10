@@ -10,9 +10,10 @@
 /**
  * @private
  */
-function Path(points, distances = undefined) {
+function Path(points, distances = undefined, isLoop) {
     this.points = points;
     this.order = new Array(points.length);
+    this.isLoop = isLoop;
     for (var i = 0; i < points.length; i++) this.order[i] = i;
     if (typeof distances === 'undefined') {
         this.distances = new Array(points.length * points.length);
@@ -22,9 +23,14 @@ function Path(points, distances = undefined) {
     }
 }
 Path.prototype.change = function (temp) {
-    const i = this.randomPos(); const
-        j = this.randomPos();
-    const delta = this.delta_distance(i, j);
+    const i = this.randomPos();
+    const j = this.randomPos();
+    let delta = 0;
+    if (this.isLoop) {
+        delta = this.delta_distance(i, j);
+    } else {
+        delta = this.delta_distance_no_loop(i, j);
+    }
     if (delta < 0 || Math.random() < Math.exp(-delta / temp)) {
         this.swap(i, j);
     }
@@ -56,6 +62,18 @@ Path.prototype.delta_distance = function (i, j) {
         - this.distance(j, jp1);
     if (jm1 === i || jp1 === i) { s += 2 * this.distance(i, j); }
     return s;
+};
+Path.prototype.delta_distance_no_loop = function (i, j) {
+    const originalOrder = this.order;
+    const swappedOrder = [...this.order];
+    [swappedOrder[i], swappedOrder[j]] = [swappedOrder[j], swappedOrder[i]];
+    let originalDistance = 0;
+    let swappedDistance = 0;
+    for (let i = 0; i < this.points.length - 1; i++) {
+        originalDistance += this.distances[originalOrder[i] * this.points.length + originalOrder[i + 1]];
+        swappedDistance += this.distances[swappedOrder[i] * this.points.length + swappedOrder[i + 1]];
+    }
+    return swappedDistance - originalDistance;
 };
 Path.prototype.index = function (i) {
     return (i + this.points.length) % this.points.length;
@@ -92,8 +110,8 @@ Path.prototype.randomPos = function () {
  * var ordered_points = solution.map(i => points[i]);
  * // ordered_points now contains the points, in the order they ought to be visited.
  * */
-function solve(points, distances = undefined, temp_coeff, callback) {
-    const path = new Path(points, distances);
+function solve(points, distances = undefined, isLoop = true, temp_coeff, callback) {
+    const path = new Path(points, distances, isLoop);
     if (points.length < 2) return path.order; // There is nothing to optimize
     if (!temp_coeff) { temp_coeff = 1 - Math.exp(-10 - Math.min(points.length, 1e6) / 1e5); }
     const has_callback = typeof (callback) === 'function';

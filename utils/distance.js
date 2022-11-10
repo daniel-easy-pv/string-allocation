@@ -4,4 +4,10 @@ const euclidean = (p, q) => {
     return Math.sqrt(dx * dx + dy * dy);
 };
 
-module.exports = { euclidean };
+const portraitEuclidean = (p, q) => {
+    const dx = p[0] - q[0];
+    const dy = (p[1] - q[1]) * 5;
+    return Math.sqrt(dx * dx + dy * dy);
+};
+
+module.exports = { euclidean, portraitEuclidean };

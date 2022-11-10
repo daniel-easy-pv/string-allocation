@@ -17,7 +17,5 @@ console.log(order);
 
 const filename = 'images/cluster.svg';
 const showString = false;
-fs.writeFile(filename, svg.generate(points, salesmenCapacities, order, showString), (err) => {
-    if (err) { return console.err(err); }
-    return console.log(`image saved in ${filename}`);
-});
+fs.writeFile(filename, svg.generate(points, salesmenCapacities, order, showString), () => { });
+

@@ -8,7 +8,8 @@
     "hello": "node ./bin/hello.js",
     "one": "node ./bin/one.js",
     "cluster": "node ./bin/cluster.js",
-    "string": "node ./bin/string.js"
+    "string": "node ./bin/string.js",
+    "block": "node ./bin/block.js"
   },
   "repository": {
     "type": "git",

@@ -9,7 +9,9 @@ for (let i = 0; i < 20; i++) {
     points.push(new salesman.Point(randomFloat(-1, 1), randomFloat(-1, 1)));
 }
 
-const solution = salesman.solve(points);
+const distances = undefined;
+const isLoop = true;
+const solution = salesman.solve(points, distances, isLoop);
 const orderedPoints = solution.map((i) => points[i]);
 
 const toSvg = (pts) => {
