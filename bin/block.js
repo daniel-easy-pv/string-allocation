@@ -2,56 +2,56 @@ const svg = require('../utils/svg');
 const fs = require('fs');
 const str = require('../anneal/string');
 const distance = require('../utils/distance');
+const block = require('../utils/block');
+const penalty = require('../utils/penalty');
+const error = require('../utils/error');
 
-// Block settings.
 let data = `
-1011111111111
-0011111111000
-1111111111111
-1111100001111
-1111101111111
-1111101111111
-1111101111111
-1111101111111
-1111101111111
+10111111111111
+00111111111000
+11111111111111
+11111000001111
+11111001111111
+11111001111111
+11111001111111
+11111001111111
+11111001111111
 `;
-let dataWithoutNewline = data.replace(/[\r\n]/gm, '');
+let nx = 14;
+let ny = 9;
 let dx = 0.1;
 let dy = 0.15;
-let nx = 13;
-let ny = 9;
 let posTopLeft = [-0.9, 0.9];
-
-const points = [];
-for (let iy = 0; iy < ny; iy++) {
-    for (let ix = 0; ix < nx; ix++) {
-        const index = iy * nx + ix;
-        if (dataWithoutNewline[index] === '1') {
-            const x = posTopLeft[0] + ix * dx;
-            const y = posTopLeft[1] - iy * dy;
-            points.push({ x, y });
-        }
-    }
-}
-
-// String settings.
-const salesmenCapacities = [15, 15, 15, 15, 15, 15, 12];
+const salesmenCapacities = [15, 15, 15, 15, 15, 15, 15];
 const distanceFn = distance.euclideanSquared;
 const showString = true;
 const isLoop = false;
 
-// Error checks.
-const salesmenCapacitiesSumToNumPoints = (points, salesmenCapacities) => {
-    let salesmenCapacitiesSum = salesmenCapacities.reduce((a, b) => a + b, 0);
-    let isEqual = salesmenCapacitiesSum === points.length;
-    if (!isEqual) {
-        console.error(`Number of points (${points.length}) does not match total salesmen capacity (sum(${salesmenCapacities}) = ${salesmenCapacitiesSum})`);
-    }
-    return isEqual;
-};
+// let data = `
+// 1111111111
+// 1111111111
+// 1111111111
+// 1111111111
+// `;
+// let nx = 10;
+// let ny = 4;
+// let dx = 0.1;
+// let dy = 0.15;
+// let posTopLeft = [-0.9, 0.9];
+// const salesmenCapacities = [10, 10, 10, 10];
+// const distanceFn = distance.euclidean;
+// const showString = true;
+// const isLoop = false;
 
-if (salesmenCapacitiesSumToNumPoints(points, salesmenCapacities)) {
-    const order = str.solve(points, salesmenCapacities, distanceFn, isLoop);
+const points = block.generate(data, nx, ny, dx, dy, posTopLeft);
+const myPenalty = penalty.multiplier(data, nx, ny);
+
+
+// Error checks.
+
+
+if (error.salesmenCapacitiesSumToNumPoints(points, salesmenCapacities)) {
+    const order = str.solve(points, salesmenCapacities, isLoop, distanceFn);
 
     // Save to file.
     const filename = 'images/block.svg';

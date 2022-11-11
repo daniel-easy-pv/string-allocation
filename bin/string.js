@@ -17,8 +17,8 @@ for (let i = 0; i < nPoints; i++) {
 
 // Solve.
 const distanceFn = distance.euclidean;
-const isLoop = true;
-const order = str.solve(points, salesmenCapacities, distanceFn, isLoop);
+const isLoop = false;
+const order = str.solve(points, salesmenCapacities, isLoop, distanceFn);
 
 
 // Save to file.

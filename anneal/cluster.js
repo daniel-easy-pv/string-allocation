@@ -16,25 +16,33 @@ const euclidean = (p, q) => {
     return Math.sqrt(dx * dx + dy * dy);
 };
 
+const sum = (arr) => {
+    let result = 0;
+    for (let i = 0; i < arr.length; i++) {
+        result = result + arr[i];
+    }
+    return result;
+};
+
 const barycenter = (points) => {
     const n = points.length;
-    const x = points.map((pt) => pt[0]).reduce((a, b) => a + b, 0);
-    const y = points.map((pt) => pt[1]).reduce((a, b) => a + b, 0);
+    const x = sum(points.map((pt) => pt[0]));
+    const y = sum(points.map((pt) => pt[1]));
     return [x / n, y / n];
 };
 
 const clusterMetric = (points, distanceFn) => {
     const b = barycenter(points);
     let result = 0;
-    points.forEach((point) => {
-        result += distanceFn(point, b);
-    });
+    for (let i = 0; i < points.length; i++) {
+        result += distanceFn(points[i], b);
+    }
     return result;
 };
 
 const clusterIMetricFromOrder = (points, salesmenCapacities, distanceFn, order, i) => {
-    const rangeStart = salesmenCapacities.slice(0, i).reduce((a, b) => a + b, 0);
-    const rangeEnd = salesmenCapacities.slice(0, i + 1).reduce((a, b) => a + b, 0);
+    const rangeStart = sum(salesmenCapacities.slice(0, i));
+    const rangeEnd = sum(salesmenCapacities.slice(0, i + 1));
     const relevantPoints = order.slice(rangeStart, rangeEnd).map((j) => points[j]);
     return clusterMetric(relevantPoints, distanceFn);
 };
@@ -127,17 +135,15 @@ Cluster.prototype.randomPos = function () {
  * var ordered_points = solution.map(i => points[i]);
  * // ordered_points now contains the points, in the order they ought to be visited.
  * */
-function solve(points, salesmenCapacities, temp_coeff, callback) {
-    const cluster = new Cluster(points, salesmenCapacities);
+function solve(points, salesmenCapacities, distanceFn = euclidean) {
+    const cluster = new Cluster(points, salesmenCapacities, distanceFn);
     if (points.length < 2) return cluster.order; // There is nothing to optimize
-    if (!temp_coeff) { temp_coeff = 1 - Math.exp(-10 - Math.min(points.length, 1e6) / 1e5); }
-    const has_callback = typeof (callback) === 'function';
+    const temp_coeff = 1 - Math.exp(-10 - Math.min(points.length, 1e6) / 1e5);
 
     for (let temperature = 100 * distance(cluster.access(0), cluster.access(1));
         temperature > 1e-6;
         temperature *= temp_coeff) {
         cluster.change(temperature);
-        if (has_callback) callback(cluster.order);
     }
     return cluster.order;
 }
