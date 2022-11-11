@@ -9,19 +9,20 @@ const permuteSlice = (mainOrder, subsliceIndices, sliceOrder) => {
     return result;
 }
 
-const makeDistanceVec = (points, distanceFn) => {
-    const l = points.length;
-    const distances = [];
-    for (let i = 0; i < l; i++) {
-        for (let j = 0; j < l; j++) {
-            distances[i * l + j] = distanceFn([points[i].x, points[i].y], [points[j].x, points[j].y]);
+const makeFilteredDistanceVec = (distances, n, relevantOrder) => {
+    const rl = relevantOrder.length;
+    const result = new Array(rl * rl);
+    for (let i = 0; i < rl; i++) {
+        for (let j = 0; j < rl; j++) {
+            const d = distances[relevantOrder[j] * n + relevantOrder[i]];
+            result[j * rl + i] = d;
+            result[i * rl + j] = d;
         }
     }
-    return distances;
 }
 
-const solve = (points, salesmenCapacities, isLoop, distanceFn, penalty) => {
-    let clusteredOrder = clus.solve(points, salesmenCapacities, distanceFn);
+const solve = (points, salesmenCapacities, isLoop, distances) => {
+    let clusteredOrder = clus.solve(points, salesmenCapacities, distances);
     for (let i = 0; i < salesmenCapacities.length; i++) {
         const rangeStart = salesmenCapacities.slice(0, i).reduce((a, b) => a + b, 0);
         const rangeEnd = salesmenCapacities.slice(0, i + 1).reduce((a, b) => a + b, 0);
@@ -35,16 +36,8 @@ const solve = (points, salesmenCapacities, isLoop, distanceFn, penalty) => {
             filteredOrder.push(clusteredOrder[j]);
             filteredPoints.push(points[clusteredOrder[j]]);
         }
-        const distances = makeDistanceVec(filteredPoints, distanceFn);
-        if (typeof penalty !== 'undefined') {
-            const fpl = filteredPoints.length;
-            for (let j = 0; j < fpl; j++) {
-                for (let k = 0; k < fpl; k++) {
-                    distances[j * fpl + k] *= penalty[filteredOrder[j] * fpl + filteredOrder[k]];
-                }
-            }
-        }
-        const sliceOrder = path.solve(filteredPoints, distances, isLoop);
+        const filteredDistances = makeFilteredDistanceVec(distances, points.length, filteredOrder);
+        const sliceOrder = path.solve(filteredPoints, filteredDistances, isLoop);
         clusteredOrder = permuteSlice(clusteredOrder, range, sliceOrder);
     }
     return clusteredOrder;

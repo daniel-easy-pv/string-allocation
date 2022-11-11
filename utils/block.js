@@ -45,6 +45,147 @@ const positionToIndex = (data, nx, ny) => {
     return result;
 }
 
+// 888b    888          d8b          888      888                                
+// 8888b   888          Y8P          888      888                                
+// 88888b  888                       888      888                                
+// 888Y88b 888  .d88b.  888  .d88b.  88888b.  88888b.   .d88b.  888d888 .d8888b  
+// 888 Y88b888 d8P  Y8b 888 d88P"88b 888 "88b 888 "88b d88""88b 888P"   88K      
+// 888  Y88888 88888888 888 888  888 888  888 888  888 888  888 888     "Y8888b. 
+// 888   Y8888 Y8b.     888 Y88b 888 888  888 888 d88P Y88..88P 888          X88 
+// 888    Y888  "Y8888  888  "Y88888 888  888 88888P"   "Y88P"  888      88888P' 
+//                               888                                             
+//                          Y8b d88P                                             
+//                           "Y88P"                                              
+const areLeftRightNeighbors = (data, nx, ny) => {
+    // returns an n x n array where result[i * n + j] = true whenever i and j are left-right neighbors.
+    const d = data.replace(/[\r\n\t\s]/g, '');
+    const n = (d.split('1').length - 1);
+    const result = [];
+    for (let i = 0; i < n * n; i++) {
+        result[i] = false;
+    }
+    let index = 0;
+    for (let iy = 0; iy < ny; iy++) {
+        for (let ix = 0; ix < nx; ix++) {
+            const curr = iy * nx + ix;
+            const next = curr + 1;
+            if (ix === nx - 1 && iy === ny - 1) { continue; } // skip last point.
+            if (d[curr] === '1' && d[next] === '1' && ix !== nx - 1) {
+                result[index * n + index + 1] = true;
+                result[(index + 1) * n + index] = true;
+            }
+            if (d[curr] === '1') {
+                index++;
+            }
+        }
+    }
+    return result;
+}
+
+const areTopBottomNeighbors = (data, nx, ny) => {
+    const d = data.replace(/[\r\n\t\s]/g, '');
+    const n = (d.split('1').length - 1);
+    const result = [];
+    for (let i = 0; i < n * n; i++) {
+        result[i] = false;
+    }
+    let index = 0;
+    for (let iy = 0; iy < ny - 1; iy++) { // skip bottom row.
+        for (let ix = 0; ix < nx; ix++) {
+            const curr = iy * nx + ix;
+            const next = curr + nx;
+            if (d[curr] === '1' && d[next] === '1') {
+                let indexOfNext = index;
+                let p = curr;
+                while (p < next) {
+                    p++;
+                    if (d[p] === '1') {
+                        indexOfNext++;
+                    }
+                }
+                result[index * n + indexOfNext] = true;
+                result[indexOfNext * n + index] = true;
+            }
+            if (d[curr] === '1') {
+                index++;
+            }
+        }
+    }
+    return result;
+}
+
+const jumps = (data) => {
+    const d = data.replace(/[\r\n\t\s]/g, '');
+    const nx = getNx(data);
+    const ny = getNy(data);
+    const n = (d.split('1').length - 1);
+    const pti = positionToIndex(data, nx, ny);
+    const result = [];
+    for (let i = 0; i < n * n; i++) {
+        result[i] = false;
+    }
+    for (let iy = 0; iy < ny; iy++) {
+        for (let ix = 0; ix < nx; ix++) {
+            const currPos = iy * nx + ix;
+            const currInd = pti[currPos];
+            if (currInd === null) { continue; }
+            let jy = iy;
+            let hasYGap = false;
+            while (jy < ny) {
+                const downPos = jy * nx + ix;
+                if (d[downPos] === '0') {
+                    hasYGap = true;
+                }
+                // check to the right.
+                let jx = ix;
+                let hasXGap = false;
+                while (jx < nx) {
+                    const diagPos = jy * nx + jx;
+                    const diagInd = pti[diagPos];
+                    if (d[diagPos] === '0') {
+                        hasXGap = true;
+                    }
+                    if (diagInd !== null) {
+                        result[currInd * n + diagInd] = hasXGap || hasYGap;
+                        result[diagInd * n + currInd] = hasXGap || hasYGap;
+                    }
+                    jx++;
+                }
+                // check to the left.
+                jx = ix;
+                hasXGap = false;
+                while (jx >= 0) {
+                    const diagPos = jy * nx + jx;
+                    const diagInd = pti[diagPos];
+                    if (d[diagPos] === '0') {
+                        hasXGap = true;
+                    }
+                    if (diagInd !== null) {
+                        result[currInd * n + diagInd] = hasXGap || hasYGap;
+                        result[diagInd * n + currInd] = hasXGap || hasYGap;
+                    }
+                    jx--;
+                }
+                jy++;
+            }
+
+        }
+    }
+    return result;
+};
+
+
+// .d8888b.                           888      
+// d88P  Y88b                          888      
+// 888    888                          888      
+// 888        888d888 8888b.  88888b.  88888b.  
+// 888  88888 888P"      "88b 888 "88b 888 "88b 
+// 888    888 888    .d888888 888  888 888  888 
+// Y88b  d88P 888    888  888 888 d88P 888  888 
+//  "Y8888P88 888    "Y888888 88888P"  888  888 
+//                            888               
+//                            888               
+//                            888               
 const graph = require('./graph');
 const toGraph = (data, nx, ny) => {
     const d = data.replace(/[\r\n\t\s]/g, '');
@@ -76,4 +217,11 @@ const getConnectedComponentsFn = (data, nx, ny) => {
     return (indices) => g.subgraph(indices).connectedComponents();
 }
 
-module.exports = { getNx, getNy, generate, numPoints, positionToIndex, toGraph, getConnectedComponentsFn };
+module.exports = {
+    getNx,
+    getNy, generate,
+    numPoints, positionToIndex,
+    toGraph, getConnectedComponentsFn,
+    areLeftRightNeighbors, areTopBottomNeighbors,
+    jumps
+};

@@ -7,15 +7,6 @@
  * */
 
 
-/**
- * Helper functions for clustering.
- */
-const euclidean = (p, q) => {
-    const dx = p[0] - q[0];
-    const dy = p[1] - q[1];
-    return Math.sqrt(dx * dx + dy * dy);
-};
-
 const sum = (arr) => {
     let result = 0;
     for (let i = 0; i < arr.length; i++) {
@@ -24,27 +15,28 @@ const sum = (arr) => {
     return result;
 };
 
-const clusterMetric = (points, relevantOrder, distanceFn) => {
-    const relevantPoints = relevantOrder.map((j) => points[j]);
-    const b = relevantPoints[0];
+const clusterMetric = (points, relevantOrder, distances) => {
+    const n = points.length;
+    const b = relevantOrder[0];
     let result = 0;
-    for (let i = 0; i < relevantPoints.length; i++) {
-        result += distanceFn(relevantPoints[i], b);
+    for (let i = 0; i < relevantOrder.length; i++) {
+        const a = relevantOrder[i];
+        result += distances[a * n + b];
     }
     return result;
 };
 
-const clusterIMetricFromOrder = (points, salesmenCapacities, distanceFn, order, i) => {
+const clusterIMetricFromOrder = (points, salesmenCapacities, order, distances, i) => {
     const rangeStart = sum(salesmenCapacities.slice(0, i));
     const rangeEnd = sum(salesmenCapacities.slice(0, i + 1));
     const relevantOrder = order.slice(rangeStart, rangeEnd);
-    return clusterMetric(points, relevantOrder, distanceFn);
+    return clusterMetric(points, relevantOrder, distances);
 };
 
-const clusterMetricFromOrder = (points, salesmenCapacities, distanceFn, order) => {
+const clusterMetricFromOrder = (points, salesmenCapacities, order, distances) => {
     let result = 0;
     for (let i = 0; i < salesmenCapacities.length; i++) {
-        result += clusterIMetricFromOrder(points, salesmenCapacities, distanceFn, order, i);
+        result += clusterIMetricFromOrder(points, salesmenCapacities, order, distances, i);
     }
     return result;
 };
@@ -54,17 +46,12 @@ const clusterMetricFromOrder = (points, salesmenCapacities, distanceFn, order) =
 /**
  * @private
  */
-function Cluster(points, salesmenCapacities, distanceFn) {
+function Cluster(points, salesmenCapacities, distances) {
     this.points = points;
     this.salesmenCapacities = salesmenCapacities;
     this.order = new Array(points.length);
     for (var i = 0; i < points.length; i++) this.order[i] = i;
-    this.distances = new Array(points.length * points.length);
-    for (var i = 0; i < points.length; i++) {
-        for (let j = 0; j < points.length; j++) {
-            this.distances[j + i * points.length] = distanceFn([points[i].x, points[i].y], [points[j].x, points[j].y]);
-        }
-    }
+    this.distances = distances;
 }
 Cluster.prototype.change = function (temp) {
     const i = this.randomPos(); const
@@ -90,8 +77,8 @@ Cluster.prototype.delta_distance = function (i, j) {
     const originalOrder = this.order;
     const swappedOrder = [...originalOrder];
     [swappedOrder[i], swappedOrder[j]] = [swappedOrder[j], swappedOrder[i]];
-    const originalDistance = clusterMetricFromOrder(this.points.map(p => [p.x, p.y]), this.salesmenCapacities, euclidean, originalOrder);
-    const swappedDistance = clusterMetricFromOrder(this.points.map(p => [p.x, p.y]), this.salesmenCapacities, euclidean, swappedOrder);
+    const originalDistance = clusterMetricFromOrder(this.points.map(p => [p.x, p.y]), this.salesmenCapacities, originalOrder, this.distances);
+    const swappedDistance = clusterMetricFromOrder(this.points.map(p => [p.x, p.y]), this.salesmenCapacities, swappedOrder, this.distances);
     return swappedDistance - originalDistance;
 };
 Cluster.prototype.index = function (i) {
@@ -129,8 +116,8 @@ Cluster.prototype.randomPos = function () {
  * var ordered_points = solution.map(i => points[i]);
  * // ordered_points now contains the points, in the order they ought to be visited.
  * */
-function solve(points, salesmenCapacities, distanceFn) {
-    const cluster = new Cluster(points, salesmenCapacities, distanceFn);
+function solve(points, salesmenCapacities, distances) {
+    const cluster = new Cluster(points, salesmenCapacities, distances);
     if (points.length < 2) return cluster.order; // There is nothing to optimize
     const temp_coeff = 1 - Math.exp(-10 - Math.min(points.length, 1e6) / 1e5);
 
