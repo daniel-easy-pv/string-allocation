@@ -24,19 +24,12 @@ const sum = (arr) => {
     return result;
 };
 
-const barycenter = (points) => {
-    const n = points.length;
-    const x = sum(points.map((pt) => pt[0]));
-    const y = sum(points.map((pt) => pt[1]));
-    return [x / n, y / n];
-};
-
-const clusterMetric = (points, distanceFn) => {
-    // const b = barycenter(points);
-    const b = points[0];
+const clusterMetric = (points, relevantOrder, distanceFn) => {
+    const relevantPoints = relevantOrder.map((j) => points[j]);
+    const b = relevantPoints[0];
     let result = 0;
-    for (let i = 0; i < points.length; i++) {
-        result += distanceFn(points[i], b);
+    for (let i = 0; i < relevantPoints.length; i++) {
+        result += distanceFn(relevantPoints[i], b);
     }
     return result;
 };
@@ -44,8 +37,8 @@ const clusterMetric = (points, distanceFn) => {
 const clusterIMetricFromOrder = (points, salesmenCapacities, distanceFn, order, i) => {
     const rangeStart = sum(salesmenCapacities.slice(0, i));
     const rangeEnd = sum(salesmenCapacities.slice(0, i + 1));
-    const relevantPoints = order.slice(rangeStart, rangeEnd).map((j) => points[j]);
-    return clusterMetric(relevantPoints, distanceFn);
+    const relevantOrder = order.slice(rangeStart, rangeEnd);
+    return clusterMetric(points, relevantOrder, distanceFn);
 };
 
 const clusterMetricFromOrder = (points, salesmenCapacities, distanceFn, order) => {
