@@ -60,7 +60,7 @@ const clusterMetricFromOrder = (points, salesmenCapacities, distanceFn, order) =
 /**
  * @private
  */
-function Cluster(points, salesmenCapacities, distanceFn = euclidean) {
+function Cluster(points, salesmenCapacities, distanceFn) {
     this.points = points;
     this.salesmenCapacities = salesmenCapacities;
     this.order = new Array(points.length);
@@ -135,7 +135,7 @@ Cluster.prototype.randomPos = function () {
  * var ordered_points = solution.map(i => points[i]);
  * // ordered_points now contains the points, in the order they ought to be visited.
  * */
-function solve(points, salesmenCapacities, distanceFn = euclidean) {
+function solve(points, salesmenCapacities, distanceFn) {
     const cluster = new Cluster(points, salesmenCapacities, distanceFn);
     if (points.length < 2) return cluster.order; // There is nothing to optimize
     const temp_coeff = 1 - Math.exp(-10 - Math.min(points.length, 1e6) / 1e5);
