@@ -14,7 +14,7 @@ function Path(points, distances = undefined, isLoop) {
     this.points = points;
     this.order = new Array(points.length);
     this.isLoop = isLoop;
-    for (var i = 0; i < points.length; i++) this.order[i] = i;
+    for (var k = 0; k < points.length; k++) this.order[k] = k;
     if (typeof distances === 'undefined') {
         this.distances = new Array(points.length * points.length);
         for (var i = 0; i < points.length; i++) { for (let j = 0; j < points.length; j++) this.distances[j + i * points.length] = distance(points[i], points[j]); }

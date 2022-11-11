@@ -43,7 +43,7 @@ const isLoop = false;
 // const showString = true;
 // const isLoop = false;
 
-const points = block.generate(data, nx, ny, dx, dy, posTopLeft);
+const points = block.generate(data, dx, dy, posTopLeft);
 const myPenalty = penalty.multiplier(data, nx, ny);
 
 

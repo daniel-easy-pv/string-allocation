@@ -1,14 +1,3 @@
-/**
- * Returns a vector v where v[i * nx + j] = true if point i and j are adjacent and in the same row.
- * @param {string} data 
- * @param {integer} nx 
- * @param {integer} ny 
- * @param {float} dx 
- * @param {float} dy 
- * @param {[float, float]} posTopLeft 
- * @returns Array(float)
- */
-
 const areLeftRightNeighbors = (data, nx, ny) => {
     const d = data.replace(/[\r\n\t\s]/g, '');
     const n = (d.split('1').length - 1);

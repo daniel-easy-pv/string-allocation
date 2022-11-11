@@ -9,7 +9,8 @@
     "one": "node ./bin/one.js",
     "cluster": "node ./bin/cluster.js",
     "string": "node ./bin/string.js",
-    "block": "node ./bin/block.js"
+    "block": "node ./bin/block.js",
+    "graph": "node ./bin/graph.js"
   },
   "repository": {
     "type": "git",

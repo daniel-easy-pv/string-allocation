@@ -25,6 +25,15 @@ const generate = (points, salesmenCapacities, order, showString = false, isLoop 
             polygonPoints += `" fill="none" stroke="${color}" stroke-width="2"/>`;
             result += polygonPoints;
         }
+        if (showString) {
+            let textX = filteredPoints[0].x;
+            let textY = filteredPoints[0].y;
+            let offsetX = -5;
+            let offsetY = 7;
+            let text = `n=${capacity}`;
+            let textString = `<text x="${(textX + 1) * width / 2 + offsetX}" y="${(-textY + 1) * height / 2 - offsetY}" font-size="10" font-weight="700" fill="${color}">${text}</text>`;
+            result += textString;
+        }
     })
     result += '</svg>';
     return result;
