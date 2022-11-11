@@ -32,7 +32,8 @@ const barycenter = (points) => {
 };
 
 const clusterMetric = (points, distanceFn) => {
-    const b = barycenter(points);
+    // const b = barycenter(points);
+    const b = points[0];
     let result = 0;
     for (let i = 0; i < points.length; i++) {
         result += distanceFn(points[i], b);
