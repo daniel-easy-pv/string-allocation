@@ -1,5 +1,6 @@
 const clus = require('./cluster');
 const path = require('./path');
+const rnge = require('../utils/range');
 
 const permuteSlice = (mainOrder, subsliceIndices, sliceOrder) => {
     let result = [...mainOrder];
@@ -21,20 +22,12 @@ const makeFilteredDistanceVec = (distances, n, relevantOrder) => {
     }
 }
 
-const getIthSalesmanRange = (salesmenCapacities, i) => {
-    const rangeStart = salesmenCapacities.slice(0, i).reduce((a, b) => a + b, 0);
-    const rangeEnd = salesmenCapacities.slice(0, i + 1).reduce((a, b) => a + b, 0);
-    let range = [];
-    for (let j = rangeStart; j < rangeEnd; j++) {
-        range.push(j);
-    }
-    return range;
-};
+
 
 const solve = (points, salesmenCapacities, isLoop, distances) => {
     let clusteredOrder = clus.solve(points, salesmenCapacities, distances);
     for (let i = 0; i < salesmenCapacities.length; i++) {
-        const range = getIthSalesmanRange(salesmenCapacities, i);
+        const range = rnge.getIthSalesmanRange(salesmenCapacities, i);
         const filteredOrder = range.map(j => clusteredOrder[j]);
         const filteredPoints = filteredOrder.map(j => points[j]);
         const filteredDistances = makeFilteredDistanceVec(distances, points.length, filteredOrder);

@@ -34,7 +34,7 @@ const dy = 0.15;
 const posTopLeft = [-0.9, 0.9];
 const points = block.generate(data, dx, dy, posTopLeft);
 const distances = distance.makeDistanceVec(points, distance.euclidean);
-const jumps = block.jumps(data);
+const jumps = block.jumpVec(data);
 for (let i = 0; i < points.length; i++) {
     for (let j = 0; j < points.length; j++) {
         const index = j * points.length + i;
@@ -49,9 +49,18 @@ const isLoop = false;
 
 
 if (error.salesmenCapacitiesSumToNumPoints(points, salesmenCapacities)) {
-    const order = str.solve(points, salesmenCapacities, isLoop, distances);
+    const numTimes = 10;
+    const orders = [];
+    const scores = [];
+    for (let i = 0; i < numTimes; i++) {
+        orders[i] = str.solve(points, salesmenCapacities, isLoop, distances);
+        const numJumps = block.totalJumps(data, salesmenCapacities, orders[i], isLoop);
+        const numDiags = block.totalDiagonals(data, salesmenCapacities, orders[i], isLoop);
+        scores[i] = numJumps * 100 + numDiags;
+    }
+    const order = orders[scores.indexOf(Math.min(...scores))];
 
     // Save to file.
     const filename = 'images/block.svg';
-    fs.writeFile(filename, svg.generate(points, salesmenCapacities, order, showString, isLoop), () => { });
+    fs.writeFile(filename, svg.generate(points, salesmenCapacities, order, { showString, isLoop, data }), () => { });
 }

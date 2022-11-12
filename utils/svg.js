@@ -1,18 +1,17 @@
+const rnge = require('./range');
+const block = require('./block');
+
 const colors = ['red', 'green', 'blue', 'orange', 'purple', 'gold', 'hotpink', 'silver'];
 
-const generate = (points, salesmenCapacities, order, showString = false, isLoop = true) => {
+const generate = (points, salesmenCapacities, order, { showString = false, isLoop = true, data } = {}) => {
     let result = '';
     const height = 400;
     const width = 400;
     result += `<svg height="${height}" width="${width}">`;
     result += '<rect width="100%" height="100%" fill="white" />';
     salesmenCapacities.forEach((capacity, i) => {
-        const rangeStart = salesmenCapacities.slice(0, i).reduce((a, b) => a + b, 0);
-        const rangeEnd = salesmenCapacities.slice(0, i + 1).reduce((a, b) => a + b, 0);
-        const filteredOrder = []
-        for (let j = rangeStart; j < rangeEnd; j++) {
-            filteredOrder.push(order[j]);
-        }
+        const range = rnge.getIthSalesmanRange(salesmenCapacities, i);
+        const filteredOrder = range.map(j => order[j]);
         const filteredPoints = filteredOrder.map(o => points[o]);
         const color = colors[i % colors.length];
         filteredPoints.forEach((p) => {
@@ -26,18 +25,30 @@ const generate = (points, salesmenCapacities, order, showString = false, isLoop 
             polygonPoints += `" fill="none" stroke="${color}" stroke-width="2"/>`;
             result += polygonPoints;
         }
-        if (showString) {
+        if (showString) { // string text
             let textX = filteredPoints[0].x;
             let textY = filteredPoints[0].y;
-            let offsetX = -5;
             let offsetY = 7;
 
+            // let text = `n=${capacity}`;
+            let text = `j=${block.stringJumps(data, filteredOrder, isLoop)}, d=${block.stringDiagonals(data, filteredOrder, isLoop)}`;
 
-            let text = `n=${capacity}`;
-            let textString = `<text x="${(textX + 1) * width / 2 + offsetX}" y="${(-textY + 1) * height / 2 - offsetY}" font-size="10" font-weight="700" fill="${color}">${text}</text>`;
+            let textString = `<text x="${(textX + 1) * width / 2}" y="${(-textY + 1) * height / 2 - offsetY}" 
+            font-size="12" font-weight="700" fill="${color}" text-anchor="middle">
+            ${text}
+            </text>`;
             result += textString;
         }
     })
+    if (showString) { // info
+        let text = `j=${block.totalJumps(data, salesmenCapacities, order, isLoop)}, d=${block.totalDiagonals(data, salesmenCapacities, order, isLoop)}`;
+
+        let textString = `<text x="50" y="350" 
+        font-size="12" font-weight="700" text-anchor="middle">
+        ${text}
+        </text>`;
+        result += textString;
+    }
     result += '</svg>';
     return result;
 };

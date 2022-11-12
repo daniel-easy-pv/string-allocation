@@ -130,7 +130,7 @@ const areTopBottomNeighbors = (data, nx, ny) => {
     return result;
 }
 
-const jumps = (data) => {
+const jumpVec = (data) => {
     const d = data.replace(/[\r\n\t\s]/g, '');
     const nx = getNx(data);
     const ny = getNy(data);
@@ -218,7 +218,7 @@ const jumps = (data) => {
     return result;
 };
 
-const diagonalScore = (data, nx, ny) => {
+const diagonalVec = (data, nx, ny) => {
     const d = data.replace(/[\r\n\t\s]/g, '');
     const itp = indexToPosition(data, nx, ny);
     const n = (d.split('1').length - 1);
@@ -243,6 +243,57 @@ const diagonalScore = (data, nx, ny) => {
     return result;
 }
 
+const scoreHelper = (vecScore, n, filteredOrder, isLoop) => {
+    let score = 0;
+    const l = filteredOrder.length;
+    for (let i = 0; i < l - 1; i++) {
+        score += vecScore[filteredOrder[i] * n + filteredOrder[i + 1]];
+    }
+    if (isLoop) {
+        score += vecScore[filteredOrder[0] * n + filteredOrder[l - 1]];
+    }
+    return score;
+};
+
+const stringDiagonals = (data, filteredOrder, isLoop) => {
+    const nx = getNx(data);
+    const ny = getNy(data);
+    const n = numPoints(data);
+    const diagScore = diagonalVec(data, nx, ny);
+    return scoreHelper(diagScore, n, filteredOrder, isLoop);
+};
+
+const stringJumps = (data, filteredOrder, isLoop) => {
+    const nx = getNx(data);
+    const ny = getNy(data);
+    const n = numPoints(data);
+    const diagScore = jumpVec(data, nx, ny);
+    return scoreHelper(diagScore, n, filteredOrder, isLoop);
+};
+
+const totalDiagonals = (data, salesmenCapacities, order, isLoop) => {
+    const rnge = require('./range');
+    let result = 0;
+    salesmenCapacities.forEach((capacity, i) => {
+        const range = rnge.getIthSalesmanRange(salesmenCapacities, i);
+        const filteredOrder = range.map(j => order[j]);
+        result += stringDiagonals(data, filteredOrder, isLoop);
+    });
+    return result;
+}
+
+const totalJumps = (data, salesmenCapacities, order, isLoop) => {
+    const rnge = require('./range');
+    let result = 0;
+    salesmenCapacities.forEach((capacity, i) => {
+        const range = rnge.getIthSalesmanRange(salesmenCapacities, i);
+        const filteredOrder = range.map(j => order[j]);
+        result += stringJumps(data, filteredOrder, isLoop);
+    });
+    return result;
+}
+
+
 // .d8888b.                           888      
 // d88P  Y88b                          888      
 // 888    888                          888      
@@ -254,44 +305,44 @@ const diagonalScore = (data, nx, ny) => {
 //                            888               
 //                            888               
 //                            888               
-const graph = require('./graph');
-const toGraph = (data, nx, ny) => {
-    const d = data.replace(/[\r\n\t\s]/g, '');
-    const pti = positionToIndex(data, nx, ny);
-    const g = new graph.Graph(numPoints(data));
-    for (let j = 0; j < ny; j++) {
-        for (let i = 0; i < nx; i++) {
-            let curr = j * nx + i;
-            if (d[curr] !== '1') { continue; }
-            if (i !== nx - 1) {
-                let right = curr + 1;
-                if (d[right] === '1') {
-                    g.addEdge(pti[curr], pti[right]);
-                }
-            }
-            if (j !== ny - 1) {
-                let bottom = curr + nx;
-                if (d[bottom] === '1') {
-                    g.addEdge(pti[curr], pti[bottom]);
-                }
-            }
-        }
-    }
-    return g;
-}
+// const graph = require('./graph');
+// const toGraph = (data, nx, ny) => {
+//     const d = data.replace(/[\r\n\t\s]/g, '');
+//     const pti = positionToIndex(data, nx, ny);
+//     const g = new graph.Graph(numPoints(data));
+//     for (let j = 0; j < ny; j++) {
+//         for (let i = 0; i < nx; i++) {
+//             let curr = j * nx + i;
+//             if (d[curr] !== '1') { continue; }
+//             if (i !== nx - 1) {
+//                 let right = curr + 1;
+//                 if (d[right] === '1') {
+//                     g.addEdge(pti[curr], pti[right]);
+//                 }
+//             }
+//             if (j !== ny - 1) {
+//                 let bottom = curr + nx;
+//                 if (d[bottom] === '1') {
+//                     g.addEdge(pti[curr], pti[bottom]);
+//                 }
+//             }
+//         }
+//     }
+//     return g;
+// }
 
-const getConnectedComponentsFn = (data, nx, ny) => {
-    const g = toGraph(data, nx, ny);
-    return (indices) => g.subgraph(indices).connectedComponents();
-}
+// const getConnectedComponentsFn = (data, nx, ny) => {
+//     const g = toGraph(data, nx, ny);
+//     return (indices) => g.subgraph(indices).connectedComponents();
+// }
 
 module.exports = {
     getNx,
     getNy, generate,
     numPoints,
     positionToIndex, indexToPosition,
-    toGraph, getConnectedComponentsFn,
     areLeftRightNeighbors, areTopBottomNeighbors,
-    diagonalScore,
-    jumps
+    jumpVec, diagonalVec,
+    stringJumps, stringDiagonals,
+    totalJumps, totalDiagonals,
 };

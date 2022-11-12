@@ -1,3 +1,0 @@
-const diagonal = (data, order) => {
-
-};
