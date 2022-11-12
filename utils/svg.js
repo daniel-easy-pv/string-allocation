@@ -1,7 +1,10 @@
 const rnge = require('./range');
 const block = require('./block');
 
-const colors = ['red', 'green', 'blue', 'orange', 'purple', 'gold', 'hotpink', 'silver'];
+const colors = [
+    'red', 'green', 'blue', 'orange', 'purple', 'gold', 'silver', 'brown',
+    'orchid', 'teal', 'cyan', 'coral', 'fuchsia', 'tan', 'navy', 'maroon'
+];
 
 const generate = (points, salesmenCapacities, order, { showString = false, isLoop = true, data } = {}) => {
     let result = '';
@@ -25,7 +28,7 @@ const generate = (points, salesmenCapacities, order, { showString = false, isLoo
             polygonPoints += `" fill="none" stroke="${color}" stroke-width="2"/>`;
             result += polygonPoints;
         }
-        if (showString) { // string text
+        if (showString && data) { // string text
             let textX = filteredPoints[0].x;
             let textY = filteredPoints[0].y;
             let offsetY = 7;
@@ -40,7 +43,7 @@ const generate = (points, salesmenCapacities, order, { showString = false, isLoo
             result += textString;
         }
     })
-    if (showString) { // info
+    if (showString && data) { // info
         let text = `j=${block.totalJumps(data, salesmenCapacities, order, isLoop)}, d=${block.totalDiagonals(data, salesmenCapacities, order, isLoop)}`;
 
         let textString = `<text x="50" y="350" 

@@ -120,7 +120,7 @@ Cluster.prototype.randomPos = function () {
 function solve(points, salesmenCapacities, distances) {
     const cluster = new Cluster(points, salesmenCapacities, distances);
     if (points.length < 2) return cluster.order; // There is nothing to optimize
-    const intensity = 10;
+    const intensity = 9;
     const temp_coeff = 1 - Math.exp(-intensity - Math.min(points.length, 1e6) / 1e5);
 
     for (let temperature = 100 * distance(cluster.access(0), cluster.access(1));

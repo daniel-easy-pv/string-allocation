@@ -24,4 +24,4 @@ const order = str.solve(points, salesmenCapacities, isLoop, distances);
 // Save to file.
 const filename = 'images/string.svg';
 const showString = true;
-fs.writeFile(filename, svg.generate(points, salesmenCapacities, order, showString, isLoop), () => { });
+fs.writeFile(filename, svg.generate(points, salesmenCapacities, order, { showString, isLoop }), () => { });

@@ -113,7 +113,7 @@ Path.prototype.randomPos = function () {
 function solve(points, distances = undefined, isLoop = true) {
     const path = new Path(points, distances, isLoop);
     if (points.length < 2) return path.order; // There is nothing to optimize
-    const intensity = 10;
+    const intensity = 9;
     const temp_coeff = 1 - Math.exp(-intensity - Math.min(points.length, 1e6) / 1e5);
 
     for (let temperature = 100 * distance(path.access(0), path.access(1));

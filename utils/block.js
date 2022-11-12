@@ -180,39 +180,39 @@ const jumpVec = (data) => {
                 }
             }
             // up then left or right.
-            hasYGap = false;
-            for (let jy = iy; jy >= 0; jy--) {
-                const downPos = jy * nx + ix;
-                if (d[downPos] === '0') {
-                    hasYGap = true;
-                }
-                // check to the right.
-                let hasXGap = false;
-                for (let jx = ix; jx < nx; jx++) {
-                    const diagPos = jy * nx + jx;
-                    const diagInd = pti[diagPos];
-                    if (d[diagPos] === '0') {
-                        hasXGap = true;
-                    }
-                    if (diagInd !== null) {
-                        result[currInd * n + diagInd] = (hasXGap || hasYGap) && result[currInd * n + diagInd];
-                        result[diagInd * n + currInd] = (hasXGap || hasYGap) && result[diagInd * n + currInd];
-                    }
-                }
-                // check to the left.
-                hasXGap = false;
-                for (let jx = ix; jx >= 0; jx--) {
-                    const diagPos = jy * nx + jx;
-                    const diagInd = pti[diagPos];
-                    if (d[diagPos] === '0') {
-                        hasXGap = true;
-                    }
-                    if (diagInd !== null) {
-                        result[currInd * n + diagInd] = (hasXGap || hasYGap) && result[currInd * n + diagInd];
-                        result[diagInd * n + currInd] = (hasXGap || hasYGap) && result[diagInd * n + currInd];
-                    }
-                }
-            }
+            // hasYGap = false;
+            // for (let jy = iy; jy >= 0; jy--) {
+            //     const downPos = jy * nx + ix;
+            //     if (d[downPos] === '0') {
+            //         hasYGap = true;
+            //     }
+            //     // check to the right.
+            //     let hasXGap = false;
+            //     for (let jx = ix; jx < nx; jx++) {
+            //         const diagPos = jy * nx + jx;
+            //         const diagInd = pti[diagPos];
+            //         if (d[diagPos] === '0') {
+            //             hasXGap = true;
+            //         }
+            //         if (diagInd !== null) {
+            //             result[currInd * n + diagInd] = (hasXGap || hasYGap) && result[currInd * n + diagInd];
+            //             result[diagInd * n + currInd] = (hasXGap || hasYGap) && result[diagInd * n + currInd];
+            //         }
+            //     }
+            //     // check to the left.
+            //     hasXGap = false;
+            //     for (let jx = ix; jx >= 0; jx--) {
+            //         const diagPos = jy * nx + jx;
+            //         const diagInd = pti[diagPos];
+            //         if (d[diagPos] === '0') {
+            //             hasXGap = true;
+            //         }
+            //         if (diagInd !== null) {
+            //             result[currInd * n + diagInd] = (hasXGap || hasYGap) && result[currInd * n + diagInd];
+            //             result[diagInd * n + currInd] = (hasXGap || hasYGap) && result[diagInd * n + currInd];
+            //         }
+            //     }
+            // }
         }
     }
     return result;

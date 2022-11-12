@@ -48,4 +48,31 @@ Graph.prototype.subgraph = function (indices) {
     return subgraph;
 }
 
-module.exports = { Graph };
+const toGraph = (data, nx, ny) => {
+    const block = require('./block');
+    const d = data.replace(/[\r\n\t\s]/g, '');
+    const pti = block.positionToIndex(data, nx, ny);
+    const g = new Graph(block.numPoints(data));
+    for (let j = 0; j < ny; j++) {
+        for (let i = 0; i < nx; i++) {
+            let curr = j * nx + i;
+            if (d[curr] !== '1') { continue; }
+            if (i !== nx - 1) {
+                let right = curr + 1;
+                if (d[right] === '1') {
+                    g.addEdge(pti[curr], pti[right]);
+                }
+            }
+            if (j !== ny - 1) {
+                let bottom = curr + nx;
+                if (d[bottom] === '1') {
+                    g.addEdge(pti[curr], pti[bottom]);
+                }
+            }
+        }
+    }
+    return g;
+}
+
+
+module.exports = { Graph, toGraph };

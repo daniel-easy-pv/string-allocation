@@ -1,6 +1,6 @@
 
 test('can get subgraph', () => {
-    const block = require('./block');
+    const graph = require('./graph');
     const data = `
     1111
     1001
@@ -9,7 +9,7 @@ test('can get subgraph', () => {
     const nx = 4;
     const ny = 3;
     const indices = [0, 1, 3, 5];
-    const g = block.toGraph(data, nx, ny);
+    const g = graph.toGraph(data, nx, ny);
     expect(g.adjListArray[3]).toStrictEqual([2, 5]);
     const h = g.subgraph(indices);
     expect(h.n).toBe(4);
