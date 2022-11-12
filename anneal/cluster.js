@@ -92,7 +92,8 @@ Cluster.prototype.distance = function (i, j) {
 };
 // Random index between 1 and the last position in the array of points
 Cluster.prototype.randomPos = function () {
-    return 1 + Math.floor(Math.random() * (this.points.length - 1));
+    // return 1 + Math.floor(Math.random() * (this.points.length - 1));
+    return Math.floor(Math.random() * (this.points.length));
 };
 
 /**
