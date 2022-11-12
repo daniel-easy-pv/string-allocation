@@ -16,7 +16,7 @@ const data = `
 1111101111111
 1111101111111
 `;
-const salesmenCapacities = [15, 15, 15, 15, 15, 14, 13];
+const salesmenCapacities = [17, 10, 10, 10, 10, 10, 9, 7, 7, 6, 6];
 
 // const data = `
 // 1111111111
@@ -31,20 +31,24 @@ const salesmenCapacities = [15, 15, 15, 15, 15, 14, 13];
 
 const dx = 0.1;
 const dy = 0.15;
-const posTopLeft = [-0.9, 0.9];
+const posTopLeft = [-0.8, 0.8];
 const points = block.generate(data, dx, dy, posTopLeft);
 const distances = distance.makeDistanceVec(points, distance.euclidean);
-const jumps = block.jumpVec(data);
+const jumpVec = block.jumpVec(data);
+const diagonalVec = block.diagonalVec(data);
 for (let i = 0; i < points.length; i++) {
     for (let j = 0; j < points.length; j++) {
         const index = j * points.length + i;
-        if (jumps[index]) {
-            distances[index] *= 10;
+        if (jumpVec[index]) {
+            distances[index] *= 100;
+        }
+        if (diagonalVec[index]) {
+            distances[index] *= 10 * diagonalVec[index];
         }
     }
 }
 const showString = true;
-const isLoop = true;
+const isLoop = false;
 
 
 
