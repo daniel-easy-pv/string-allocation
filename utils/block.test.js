@@ -28,17 +28,22 @@ test('can compute positionToIndex', () => {
     expect(pti[5]).toBe(3);
 });
 
-test('can compute positionToIndex', () => {
+test('can compute indexToPosition', () => {
     const data = `
-    110
+    010
     101
     011
     100
     `;
     const nx = 3;
     const ny = 4;
-    const g = block.toGraph(data, nx, ny);
-    expect(g.connectedComponents()).toBe(3);
+    const itp = block.indexToPosition(data, nx, ny);
+    expect(itp[0]).toBe(1);
+    expect(itp[1]).toBe(3);
+    expect(itp[2]).toBe(5);
+    expect(itp[3]).toBe(7);
+    expect(itp[4]).toBe(8);
+    expect(itp[5]).toBe(9);
 });
 
 test('can get connected components function', () => {
@@ -161,6 +166,31 @@ test('test jump 2', () => {
     expect(v[2 * n + 4]).toBe(true);
     expect(v[3 * n + 3]).toBe(false);
     expect(v[3 * n + 4]).toBe(true);
+    expect(v[4 * n + 4]).toBe(false);
+
+});
+
+test('test jump 3', () => {
+    const data = `
+    10011
+    11000
+    `;
+    const n = block.numPoints(data);
+    const v = block.jumps(data);
+    expect(v[0 * n + 0]).toBe(false);
+    expect(v[0 * n + 1]).toBe(true);
+    expect(v[0 * n + 2]).toBe(true);
+    expect(v[0 * n + 3]).toBe(false);
+    expect(v[0 * n + 4]).toBe(true);
+    expect(v[1 * n + 1]).toBe(false);
+    expect(v[1 * n + 2]).toBe(false);
+    expect(v[1 * n + 3]).toBe(true);
+    expect(v[1 * n + 4]).toBe(true);
+    expect(v[2 * n + 2]).toBe(false);
+    expect(v[2 * n + 3]).toBe(true);
+    expect(v[2 * n + 4]).toBe(true);
+    expect(v[3 * n + 3]).toBe(false);
+    expect(v[3 * n + 4]).toBe(false);
     expect(v[4 * n + 4]).toBe(false);
 
 });

@@ -45,6 +45,22 @@ const positionToIndex = (data, nx, ny) => {
     return result;
 }
 
+const indexToPosition = (data, nx, ny) => {
+    const d = data.replace(/[\r\n\t\s]/g, '');
+    const result = [];
+    let index = 0;
+    for (let j = 0; j < ny; j++) {
+        for (let i = 0; i < nx; i++) {
+            let curr = j * nx + i;
+            if (d[curr] === '1') {
+                result[index] = curr;
+                index++;
+            }
+        }
+    }
+    return result;
+}
+
 // 888b    888          d8b          888      888                                
 // 8888b   888          Y8P          888      888                                
 // 88888b  888                       888      888                                
@@ -115,10 +131,6 @@ const areTopBottomNeighbors = (data, nx, ny) => {
 }
 
 const jumps = (data) => {
-    return jumpsVerticalFirst(data);
-}
-
-const jumpsVerticalFirst = (data) => {
     const d = data.replace(/[\r\n\t\s]/g, '');
     const nx = getNx(data);
     const ny = getNy(data);
@@ -134,6 +146,7 @@ const jumpsVerticalFirst = (data) => {
             const currInd = pti[currPos];
             if (currInd === null) { continue; }
             let hasYGap = false;
+            // down then left or right.
             for (let jy = iy; jy < ny; jy++) {
                 const downPos = jy * nx + ix;
                 if (d[downPos] === '0') {
@@ -148,8 +161,8 @@ const jumpsVerticalFirst = (data) => {
                         hasXGap = true;
                     }
                     if (diagInd !== null) {
-                        result[currInd * n + diagInd] = hasXGap || hasYGap;
-                        result[diagInd * n + currInd] = hasXGap || hasYGap;
+                        result[currInd * n + diagInd] = hasXGap || hasYGap || result[currInd * n + diagInd];
+                        result[diagInd * n + currInd] = hasXGap || hasYGap || result[diagInd * n + currInd];
                     }
                 }
                 // check to the left.
@@ -161,8 +174,42 @@ const jumpsVerticalFirst = (data) => {
                         hasXGap = true;
                     }
                     if (diagInd !== null) {
-                        result[currInd * n + diagInd] = hasXGap || hasYGap;
-                        result[diagInd * n + currInd] = hasXGap || hasYGap;
+                        result[currInd * n + diagInd] = hasXGap || hasYGap || result[currInd * n + diagInd];
+                        result[diagInd * n + currInd] = hasXGap || hasYGap || result[diagInd * n + currInd];
+                    }
+                }
+            }
+            // up then left or right.
+            hasYGap = false;
+            for (let jy = iy; jy >= 0; jy--) {
+                const downPos = jy * nx + ix;
+                if (d[downPos] === '0') {
+                    hasYGap = true;
+                }
+                // check to the right.
+                let hasXGap = false;
+                for (let jx = ix; jx < nx; jx++) {
+                    const diagPos = jy * nx + jx;
+                    const diagInd = pti[diagPos];
+                    if (d[diagPos] === '0') {
+                        hasXGap = true;
+                    }
+                    if (diagInd !== null) {
+                        result[currInd * n + diagInd] = hasXGap || hasYGap || result[currInd * n + diagInd];
+                        result[diagInd * n + currInd] = hasXGap || hasYGap || result[diagInd * n + currInd];
+                    }
+                }
+                // check to the left.
+                hasXGap = false;
+                for (let jx = ix; jx >= 0; jx--) {
+                    const diagPos = jy * nx + jx;
+                    const diagInd = pti[diagPos];
+                    if (d[diagPos] === '0') {
+                        hasXGap = true;
+                    }
+                    if (diagInd !== null) {
+                        result[currInd * n + diagInd] = hasXGap || hasYGap || result[currInd * n + diagInd];
+                        result[diagInd * n + currInd] = hasXGap || hasYGap || result[diagInd * n + currInd];
                     }
                 }
             }
@@ -216,7 +263,8 @@ const getConnectedComponentsFn = (data, nx, ny) => {
 module.exports = {
     getNx,
     getNy, generate,
-    numPoints, positionToIndex,
+    numPoints,
+    positionToIndex, indexToPosition,
     toGraph, getConnectedComponentsFn,
     areLeftRightNeighbors, areTopBottomNeighbors,
     jumps
