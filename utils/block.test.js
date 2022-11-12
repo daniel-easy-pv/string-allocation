@@ -194,3 +194,19 @@ test('test jump 3', () => {
     expect(v[4 * n + 4]).toBe(false);
 
 });
+
+test('test diagonalScore', () => {
+    const data = `
+    1001
+    1011
+    `;
+    const nx = 4;
+    const ny = 2;
+    const v = block.diagonalScore(data, nx, ny);
+    const n = block.numPoints(data);
+    expect(v[0 * n + 0]).toBe(0);
+    expect(v[0 * n + 1]).toBe(0);
+    expect(v[0 * n + 2]).toBe(0);
+    expect(v[0 * n + 3]).toBe(3);
+    expect(v[0 * n + 4]).toBe(4);
+});

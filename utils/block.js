@@ -218,6 +218,31 @@ const jumps = (data) => {
     return result;
 };
 
+const diagonalScore = (data, nx, ny) => {
+    const d = data.replace(/[\r\n\t\s]/g, '');
+    const itp = indexToPosition(data, nx, ny);
+    const n = (d.split('1').length - 1);
+    const result = [];
+    for (let i = 0; i < n * n; i++) {
+        result[i] = 1;
+    }
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            const iPos = itp[i];
+            const jPos = itp[j];
+            const ix = iPos % nx;
+            const iy = parseInt(iPos / nx);
+            const jx = jPos % nx;
+            const jy = parseInt(jPos / nx);
+            const dx = Math.abs(ix - jx);
+            const dy = Math.abs(iy - jy);
+            const score = Math.min(dx, dy) === 0 ? 0 : dx + dy;
+            result[i * n + j] = score;
+        }
+    }
+    return result;
+}
+
 // .d8888b.                           888      
 // d88P  Y88b                          888      
 // 888    888                          888      
@@ -267,5 +292,6 @@ module.exports = {
     positionToIndex, indexToPosition,
     toGraph, getConnectedComponentsFn,
     areLeftRightNeighbors, areTopBottomNeighbors,
+    diagonalScore,
     jumps
 };
