@@ -5,7 +5,7 @@ const distance = require('../utils/distance');
 const block = require('../utils/block');
 const error = require('../utils/error');
 
-let data = `
+const data = `
 1011111111111
 0011111111000
 1111111111111
@@ -16,10 +16,22 @@ let data = `
 1111101111111
 1111101111111
 `;
-let dx = 0.1;
-let dy = 0.15;
-let posTopLeft = [-0.9, 0.9];
 const salesmenCapacities = [15, 15, 15, 15, 15, 14, 13];
+
+// const data = `
+// 1111111111
+// 1111011111
+// 1111011111
+// 1110001111
+// 1111011111
+// 1000000001
+// `;
+// const salesmenCapacities = [11, 10, 9, 8, 8];
+
+
+const dx = 0.1;
+const dy = 0.15;
+const posTopLeft = [-0.9, 0.9];
 const points = block.generate(data, dx, dy, posTopLeft);
 const distances = distance.makeDistanceVec(points, distance.euclidean);
 const jumps = block.jumps(data);
@@ -27,19 +39,14 @@ for (let i = 0; i < points.length; i++) {
     for (let j = 0; j < points.length; j++) {
         const index = j * points.length + i;
         if (jumps[index]) {
-            distances[index] *= 10;
+            distances[index] *= 1;
         }
     }
 }
 const showString = true;
 const isLoop = false;
 
-// let data = `
-// 1111111111
-// 1111111111
-// 1111111111
-// 1111111111
-// `;
+
 
 if (error.salesmenCapacitiesSumToNumPoints(points, salesmenCapacities)) {
     const order = str.solve(points, salesmenCapacities, isLoop, distances);
