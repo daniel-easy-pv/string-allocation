@@ -294,48 +294,6 @@ const totalJumps = (data, salesmenCapacities, order, isLoop) => {
 }
 
 
-// .d8888b.                           888      
-// d88P  Y88b                          888      
-// 888    888                          888      
-// 888        888d888 8888b.  88888b.  88888b.  
-// 888  88888 888P"      "88b 888 "88b 888 "88b 
-// 888    888 888    .d888888 888  888 888  888 
-// Y88b  d88P 888    888  888 888 d88P 888  888 
-//  "Y8888P88 888    "Y888888 88888P"  888  888 
-//                            888               
-//                            888               
-//                            888               
-// const graph = require('./graph');
-// const toGraph = (data, nx, ny) => {
-//     const d = data.replace(/[\r\n\t\s]/g, '');
-//     const pti = positionToIndex(data, nx, ny);
-//     const g = new graph.Graph(numPoints(data));
-//     for (let j = 0; j < ny; j++) {
-//         for (let i = 0; i < nx; i++) {
-//             let curr = j * nx + i;
-//             if (d[curr] !== '1') { continue; }
-//             if (i !== nx - 1) {
-//                 let right = curr + 1;
-//                 if (d[right] === '1') {
-//                     g.addEdge(pti[curr], pti[right]);
-//                 }
-//             }
-//             if (j !== ny - 1) {
-//                 let bottom = curr + nx;
-//                 if (d[bottom] === '1') {
-//                     g.addEdge(pti[curr], pti[bottom]);
-//                 }
-//             }
-//         }
-//     }
-//     return g;
-// }
-
-// const getConnectedComponentsFn = (data, nx, ny) => {
-//     const g = toGraph(data, nx, ny);
-//     return (indices) => g.subgraph(indices).connectedComponents();
-// }
-
 module.exports = {
     getNx,
     getNy, generate,
