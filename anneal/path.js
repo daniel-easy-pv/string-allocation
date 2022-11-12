@@ -86,7 +86,7 @@ Path.prototype.distance = function (i, j) {
 };
 // Random index between 1 and the last position in the array of points
 Path.prototype.randomPos = function () {
-    return 1 + Math.floor(Math.random() * (this.points.length - 1));
+    return Math.floor(Math.random() * (this.points.length));
 };
 
 /**
@@ -113,7 +113,7 @@ Path.prototype.randomPos = function () {
 function solve(points, distances = undefined, isLoop = true) {
     const path = new Path(points, distances, isLoop);
     if (points.length < 2) return path.order; // There is nothing to optimize
-    const intensity = 8;
+    const intensity = 10;
     const temp_coeff = 1 - Math.exp(-intensity - Math.min(points.length, 1e6) / 1e5);
 
     for (let temperature = 100 * distance(path.access(0), path.access(1));
