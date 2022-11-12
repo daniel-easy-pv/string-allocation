@@ -115,6 +115,10 @@ const areTopBottomNeighbors = (data, nx, ny) => {
 }
 
 const jumps = (data) => {
+    return jumpsVerticalFirst(data);
+}
+
+const jumpsVerticalFirst = (data) => {
     const d = data.replace(/[\r\n\t\s]/g, '');
     const nx = getNx(data);
     const ny = getNy(data);
@@ -129,17 +133,15 @@ const jumps = (data) => {
             const currPos = iy * nx + ix;
             const currInd = pti[currPos];
             if (currInd === null) { continue; }
-            let jy = iy;
             let hasYGap = false;
-            while (jy < ny) {
+            for (let jy = iy; jy < ny; jy++) {
                 const downPos = jy * nx + ix;
                 if (d[downPos] === '0') {
                     hasYGap = true;
                 }
                 // check to the right.
-                let jx = ix;
                 let hasXGap = false;
-                while (jx < nx) {
+                for (let jx = ix; jx < nx; jx++) {
                     const diagPos = jy * nx + jx;
                     const diagInd = pti[diagPos];
                     if (d[diagPos] === '0') {
@@ -149,12 +151,10 @@ const jumps = (data) => {
                         result[currInd * n + diagInd] = hasXGap || hasYGap;
                         result[diagInd * n + currInd] = hasXGap || hasYGap;
                     }
-                    jx++;
                 }
                 // check to the left.
-                jx = ix;
                 hasXGap = false;
-                while (jx >= 0) {
+                for (let jx = ix; jx >= 0; jx--) {
                     const diagPos = jy * nx + jx;
                     const diagInd = pti[diagPos];
                     if (d[diagPos] === '0') {
@@ -164,16 +164,12 @@ const jumps = (data) => {
                         result[currInd * n + diagInd] = hasXGap || hasYGap;
                         result[diagInd * n + currInd] = hasXGap || hasYGap;
                     }
-                    jx--;
                 }
-                jy++;
             }
-
         }
     }
     return result;
 };
-
 
 // .d8888b.                           888      
 // d88P  Y88b                          888      
