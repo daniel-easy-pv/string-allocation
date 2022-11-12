@@ -110,17 +110,16 @@ Path.prototype.randomPos = function () {
  * var ordered_points = solution.map(i => points[i]);
  * // ordered_points now contains the points, in the order they ought to be visited.
  * */
-function solve(points, distances = undefined, isLoop = true, temp_coeff, callback) {
+function solve(points, distances = undefined, isLoop = true) {
     const path = new Path(points, distances, isLoop);
     if (points.length < 2) return path.order; // There is nothing to optimize
-    if (!temp_coeff) { temp_coeff = 1 - Math.exp(-8 - Math.min(points.length, 1e6) / 1e5); }
-    const has_callback = typeof (callback) === 'function';
+    const intensity = 8;
+    const temp_coeff = 1 - Math.exp(-intensity - Math.min(points.length, 1e6) / 1e5);
 
     for (let temperature = 100 * distance(path.access(0), path.access(1));
         temperature > 1e-6;
         temperature *= temp_coeff) {
         path.change(temperature);
-        if (has_callback) callback(path.order);
     }
     return path.order;
 }

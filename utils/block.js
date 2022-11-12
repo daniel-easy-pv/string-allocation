@@ -161,8 +161,8 @@ const jumpVec = (data) => {
                         hasXGap = true;
                     }
                     if (diagInd !== null) {
-                        result[currInd * n + diagInd] = hasXGap || hasYGap || result[currInd * n + diagInd];
-                        result[diagInd * n + currInd] = hasXGap || hasYGap || result[diagInd * n + currInd];
+                        result[currInd * n + diagInd] = hasXGap || hasYGap;
+                        result[diagInd * n + currInd] = hasXGap || hasYGap;
                     }
                 }
                 // check to the left.
@@ -174,8 +174,8 @@ const jumpVec = (data) => {
                         hasXGap = true;
                     }
                     if (diagInd !== null) {
-                        result[currInd * n + diagInd] = hasXGap || hasYGap || result[currInd * n + diagInd];
-                        result[diagInd * n + currInd] = hasXGap || hasYGap || result[diagInd * n + currInd];
+                        result[currInd * n + diagInd] = hasXGap || hasYGap;
+                        result[diagInd * n + currInd] = hasXGap || hasYGap;
                     }
                 }
             }
@@ -195,8 +195,8 @@ const jumpVec = (data) => {
                         hasXGap = true;
                     }
                     if (diagInd !== null) {
-                        result[currInd * n + diagInd] = hasXGap || hasYGap || result[currInd * n + diagInd];
-                        result[diagInd * n + currInd] = hasXGap || hasYGap || result[diagInd * n + currInd];
+                        result[currInd * n + diagInd] = (hasXGap || hasYGap) && result[currInd * n + diagInd];
+                        result[diagInd * n + currInd] = (hasXGap || hasYGap) && result[diagInd * n + currInd];
                     }
                 }
                 // check to the left.
@@ -208,8 +208,8 @@ const jumpVec = (data) => {
                         hasXGap = true;
                     }
                     if (diagInd !== null) {
-                        result[currInd * n + diagInd] = hasXGap || hasYGap || result[currInd * n + diagInd];
-                        result[diagInd * n + currInd] = hasXGap || hasYGap || result[diagInd * n + currInd];
+                        result[currInd * n + diagInd] = (hasXGap || hasYGap) && result[currInd * n + diagInd];
+                        result[diagInd * n + currInd] = (hasXGap || hasYGap) && result[diagInd * n + currInd];
                     }
                 }
             }

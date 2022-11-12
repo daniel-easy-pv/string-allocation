@@ -39,17 +39,17 @@ for (let i = 0; i < points.length; i++) {
     for (let j = 0; j < points.length; j++) {
         const index = j * points.length + i;
         if (jumps[index]) {
-            distances[index] *= 1;
+            distances[index] *= 10;
         }
     }
 }
 const showString = true;
-const isLoop = false;
+const isLoop = true;
 
 
 
 if (error.salesmenCapacitiesSumToNumPoints(points, salesmenCapacities)) {
-    const numTimes = 10;
+    const numTimes = 1;
     const orders = [];
     const scores = [];
     for (let i = 0; i < numTimes; i++) {
