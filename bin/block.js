@@ -17,7 +17,7 @@ const data = `
 111110111111
 `;
 const salesmenCapacities = [17, 10, 10, 10, 10, 10, 8, 7, 6, 6];
-const desiredScore = 102;
+const desiredScore = 102; // j = 1, d = 2
 
 // const data = `
 // 111111111
