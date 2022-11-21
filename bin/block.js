@@ -65,7 +65,7 @@ const isLoop = false;
 
 
 if (error.salesmenCapacitiesSumToNumPoints(points, salesmenCapacities)) {
-    const numTimes = 100;
+    const numTimes = 10;
     const orders = [];
     const scores = [];
     for (let i = 0; i < numTimes; i++) {
