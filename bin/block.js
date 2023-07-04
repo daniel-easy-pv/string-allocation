@@ -6,17 +6,16 @@ const block = require('../utils/block');
 const error = require('../utils/error');
 
 const data = `
-101111111111
-001111111100
-111111111111
-111110000111
-111110111111
-111110111111
-111110111111
-111110111111
-111110111111
+101111111111101111111111101111111111
+001111111100101111111111101111111111
+111111111111101111111111101111111111
+111110000111111110000111111110000111
+111110111111111110111111111110111111
+111110111111111110111111111110111111
+111110111111111110111111111110111111
+111110111111111110111111111110111111
 `;
-const salesmenCapacities = [17, 10, 10, 10, 10, 10, 8, 7, 6, 6];
+const salesmenCapacities = [...Array(25).fill(10), 3];
 const desiredScore = 102; // j = 1, d = 2
 
 // const data = `
@@ -35,9 +34,9 @@ const desiredScore = 102; // j = 1, d = 2
 // const data = `
 // 1111111111
 // 1111111111
-// 1111111111
+// 1111101111
 // `;
-// const salesmenCapacities = [11, 11, 8];
+// const salesmenCapacities = [11, 10, 8];
 // const desiredScore = 0;
 
 
@@ -65,7 +64,7 @@ const isLoop = false;
 
 
 if (error.salesmenCapacitiesSumToNumPoints(points, salesmenCapacities)) {
-    const numTimes = 10;
+    const numTimes = 1;
     const orders = [];
     const scores = [];
     for (let i = 0; i < numTimes; i++) {
